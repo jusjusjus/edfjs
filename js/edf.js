@@ -3,6 +3,17 @@ var toString = function(c) {
   return String(c).trim();
 }
 
+var string_from_buffer = function(buffer, start, end) {
+  var ba = new Uint8Array(buffer, start, end-start);
+  return String.fromCharCode.apply(null, ba);
+}
+
+var assert = function(condition, msg) {
+  if (!condition) {
+    throw "Assertion Error: "+msg;
+  }
+}
+
 var Channel = function (self={}) {
   self.fields = {
     label:    		          [toString, 16],
@@ -72,85 +83,101 @@ var EDF = function (self={}) {
     num_channels:    [Number, 4]
   };
   header_bytes = 256;
-
-  var cumsum = function(x) {
-    var c = [x[0]];
-    for (var i=1; i<x.length; i++) {
-      c.push(c[i-1]+x[i]);
-    }
-    return c;
-  }
+  bytes_per_sample = 2;
 
   var onload_handler = function(evt, callback, header_only) {
     read_buffer(evt.target.result, header_only);
     callback(evt);
   }
 
-  var read_buffer = function (buffer, header_only=false) {
-    // header
-    var headerBytes = new Uint8Array(buffer, 0, header_bytes);
-    var str = String.fromCharCode.apply(null, headerBytes);
-    start = 0;
+  var read_header_from_string = function (string) {
+    var start = 0;
     for (var name in self.fields) {
       var type = self.fields[name][0];
-      var len = self.fields[name][1];
-      end = start + len;
-      self[name] = type(str.substring(start, end));
+      var end = start + self.fields[name][1];
+      self[name] = type(string.substring(start, end));
       start = end;
     }
-    if (self.num_channels == 0) {
-      return null;
-    }
-    // channels
-    var channelBytes = new Uint8Array(buffer, header_bytes,
-                                      self.num_header_bytes-header_bytes);
-    str = String.fromCharCode.apply(null, channelBytes);
+    var dtstring = self.startdate+'T'+self.starttime.replace(/\./g, ':');
+    self.startdatetime = new Date(dtstring);
+  }
+
+  var read_channel_header_from_string = function (string) {
     self.channels = [];
     for (var c=0; c<self.num_channels; c++) {
       self.channels.push(Channel());
     }
-    start = 0;
+    var start = 0;
     var channel_fields = self.channels[0].fields;
     for (var name in channel_fields) {
       var type = channel_fields[name][0];
       var len = channel_fields[name][1];
       for (var c=0; c<self.num_channels; c++) {
-        end = start + len;
-        self.channels[c][name] = type(str.substring(start, end));
+        var end = start + len;
+        self.channels[c][name] = type(string.substring(start, end));
         start = end;
       }
     }
-    if(header_only) {
-      return null;
-    }
-    // blob
-    var bytes_per_sample = 2;
-    var bytes_by_channel = []
+  }
+
+  var check_blob_size = function(buffer) {
+    var samples_per_record = 0;
     for (var c=0; c<self.num_channels; c++) {
-      bytes_by_channel.push(bytes_per_sample * self.channels[c].num_samples_per_record);
+      samples_per_record += self.channels[c].num_samples_per_record;
     }
-    var channel_bytes_map = cumsum(bytes_by_channel)
-    var bytes_per_record = channel_bytes_map[self.num_channels-1];
-    var blob = new Int16Array(buffer, num_header_bytes,
-                              (buffer.byteLength-num_header_bytes)/2);
+    var expected_samples = samples_per_record*self.num_records;
+    var samples_in_blob = (buffer.byteLength-self.num_header_bytes)/2;
+    self.duration = self.record_duration * samples_in_blob/samples_per_record;
+    assert(samples_in_blob == expected_samples, "Header implies "+expected_samples+" samples; "+samples_in_blob+" found.");
+    return samples_in_blob;
+  }
+
+  var read_blob_from_buffer = function (buffer) {
+    var record_channel_map = [0];
+    for (var c=0; c<self.num_channels; c++) {
+      record_channel_map.push(
+        record_channel_map[c] + self.channels[c].num_samples_per_record);
+    }
+    try {
+      var samples_in_blob = check_blob_size(buffer);
+    } catch(err) {
+      console.error(err);
+      var samples_in_blob = (buffer.byteLength-self.num_header_bytes)/2;
+    }
+    var blob = new Int16Array(buffer, self.num_header_bytes, samples_in_blob);
     for (var c=0; c<self.num_channels; c++) {
       self.channels[c].init(self.num_records, self.record_duration);
     }
     for (r=0; r<self.num_records; r++) {
-      var start = 0;
       for (var c=0; c<self.num_channels; c++) {
-        var end = channel_bytes_map[c];
-        self.channels[c].set_record(r, blob.slice(start, end));
-        start = end;
+        self.channels[c].set_record(r,
+          blob.slice(record_channel_map[c], record_channel_map[c+1]));
       }
+    }
+  }
+
+  var read_buffer = function (buffer, header_only=false) {
+    // header
+    var str = string_from_buffer(buffer, 0, header_bytes);
+    read_header_from_string(str);
+    if (self.num_channels == 0) {
+      return null;
+    }
+    // channels
+    str = string_from_buffer(buffer, header_bytes, self.num_header_bytes);
+    read_channel_header_from_string(str);
+    check_blob_size(buffer);
+    // blob
+    if(header_only == false) {
+      read_blob_from_buffer(buffer);
     }
   }
 
 	var from_file = function (file, callback, header_only=false) {
 		var reader = new FileReader();
     self.filename = file.name;
-		reader.readAsArrayBuffer(file);
 		reader.onload = function (evt) { onload_handler(evt, callback, header_only); };
+		reader.readAsArrayBuffer(file);
 	}
 
   self.from_file = from_file;

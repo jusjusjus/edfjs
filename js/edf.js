@@ -21,7 +21,7 @@ var Channel = function (self={}) {
   sampling_rate = null;
 
   var digital2physical = function (d) {
-    return scale*(d-offset);
+    return scale*(d+offset);
   }
 
   var init = function (num_records, record_duration) {

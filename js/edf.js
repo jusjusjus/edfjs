@@ -36,28 +36,28 @@ var Channel = function (self={}) {
   }
 
   var init = function (num_records, record_duration) {
-    if (this.num_samples_per_record == null) {
+    if (self.num_samples_per_record == null) {
       console.log("Error: allocate_blob called on uninitialized channel.");
       return null;
     }
-    this.blob = new Float32Array(num_records*this.num_samples_per_record);
+    self.blob = new Float32Array(num_records*self.num_samples_per_record);
     scale = (this.physical_maximum - this.physical_minimum) /
                  (this.digital_maximum  - this.digital_minimum);
     offset = this.physical_maximum / scale - this.digital_maximum;
-    sampling_rate = this.num_samples_per_record/record_duration;
+    sampling_rate = self.num_samples_per_record/record_duration;
   }
 
   var set_record = function (record, digi) {
-    var start = record*this.num_samples_per_record;
-    for (var i=0; i<this.num_samples_per_record; i++) {
-      this.blob[start+i] = digital2physical(digi[i]);
+    var start = record*self.num_samples_per_record;
+    for (var i=0; i<self.num_samples_per_record; i++) {
+      self.blob[start+i] = digital2physical(digi[i]);
     }
   }
 
   var get_physical_samples = function (t0, dt) {
     var start = t0*sampling_rate;
     var end = dt*sampling_rate;
-    return this.blob.slice(start, start+end);
+    return self.blob.slice(start, start+end);
   }
 
   self.set_record = set_record;
@@ -138,6 +138,7 @@ var EDF = function (self={}) {
       record_channel_map.push(
         record_channel_map[c] + self.channels[c].num_samples_per_record);
     }
+    samples_per_record = record_channel_map[self.channels.length];
     try {
       var samples_in_blob = check_blob_size(buffer);
     } catch(err) {
@@ -151,7 +152,11 @@ var EDF = function (self={}) {
     for (r=0; r<self.num_records; r++) {
       for (var c=0; c<self.num_channels; c++) {
         self.channels[c].set_record(r,
-          blob.slice(record_channel_map[c], record_channel_map[c+1]));
+          blob.slice(
+            r*samples_per_record + record_channel_map[c],
+            r*samples_per_record + record_channel_map[c+1]
+          )
+        );
       }
     }
   }

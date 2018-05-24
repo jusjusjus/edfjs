@@ -221,6 +221,15 @@ var EDF = function (self={}) {
 		reader.readAsArrayBuffer(file);
 	}
 
+  var relative_time = function (milliseconds) {
+    return self.startdatetime.getTime()+milliseconds;
+  }
+
+  var relative_date = function (milliseconds) {
+    return new Date(relative_time(milliseconds));
+  }
+
   self.from_file = from_file;
+  self.relative_date = relative_date;
   return self;
 };

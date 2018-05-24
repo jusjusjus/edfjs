@@ -14,6 +14,43 @@ var assert = function(condition, msg) {
   }
 }
 
+
+var parseDateTime = function(date, time, century='20') {
+  var year, month, day, hour, minute, second, milliseconds;
+  if (date.includes('-')) {
+    date = date.split('-');
+    year = date[0];
+    month = date[1];
+    day = date[2];
+  } else if (date.includes('/')) {
+    date = date.split('/');
+    year = date[2];
+    month = date[0];
+    day = date[1];
+  } else if (date.includes('.')) {
+    date = date.split('.');
+    year = date[2];
+    month = date[1];
+    day = date[0];
+  }
+  month = +month-1;
+  if (year.length == 2) {
+    year = century+year;
+  }
+  time = time.replace(/\./g, ':').split(':');
+  hour = time[0];
+  minute = time[1];
+  second = time[2];
+  milliseconds = time[3];
+  if (milliseconds && milliseconds.length != 3) {
+    for (var i=0; i<3-milliseconds.length; i++) {
+      milliseconds += '0';
+    }
+    milliseconds = milliseconds.substring(0, 4);
+  }
+  return new Date(Date.UTC(year, month, day, hour, minute, second, milliseconds || 0));
+}
+
 var Channel = function (self={}) {
   self.fields = {
     label:    		          [toString, 16],
@@ -98,8 +135,7 @@ var EDF = function (self={}) {
       self[name] = type(string.substring(start, end));
       start = end;
     }
-    var dtstring = self.startdate+'T'+self.starttime.replace(/\./g, ':');
-    self.startdatetime = new Date(dtstring);
+    self.startdatetime = parseDateTime(self.startdate, self.starttime);
   }
 
   var read_channel_header_from_string = function (string) {

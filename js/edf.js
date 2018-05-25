@@ -221,6 +221,7 @@ var EDF = function (self={}) {
     self.filename = file.name;
 		reader.onload = function (evt) { onload_handler(evt, callback, header_only); };
 		reader.readAsArrayBuffer(file);
+    return self;
 	}
 
   var relative_time = function (milliseconds) {

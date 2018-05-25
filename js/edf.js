@@ -1,4 +1,6 @@
 
+'use strict'
+
 var toString = function(c) {
   return String(c).trim();
 }
@@ -64,9 +66,9 @@ var Channel = function (self={}) {
     num_samples_per_record: [Number, 8],
     reserved:               [toString, 32]
   };
-  scale = null;
-  offset = null;
-  sampling_rate = null;
+  var scale = null;
+  var offset = null;
+  var sampling_rate = null;
 
   var digital2physical = function (d) {
     return scale*(d+offset);
@@ -119,8 +121,8 @@ var EDF = function (self={}) {
     record_duration: [Number, 8],
     num_channels:    [Number, 4]
   };
-  header_bytes = 256;
-  bytes_per_sample = 2;
+  var header_bytes = 256;
+  var bytes_per_sample = 2;
 
   var onload_handler = function(evt, callback, header_only) {
     read_buffer(evt.target.result, header_only);
@@ -174,7 +176,7 @@ var EDF = function (self={}) {
       record_channel_map.push(
         record_channel_map[c] + self.channels[c].num_samples_per_record);
     }
-    samples_per_record = record_channel_map[self.channels.length];
+    var samples_per_record = record_channel_map[self.channels.length];
     try {
       var samples_in_blob = check_blob_size(buffer);
     } catch(err) {
@@ -185,7 +187,7 @@ var EDF = function (self={}) {
     for (var c=0; c<self.num_channels; c++) {
       self.channels[c].init(self.num_records, self.record_duration);
     }
-    for (r=0; r<self.num_records; r++) {
+    for (var r=0; r<self.num_records; r++) {
       for (var c=0; c<self.num_channels; c++) {
         self.channels[c].set_record(r,
           blob.slice(

@@ -236,5 +236,10 @@ var EDF = function (self={}) {
 
   self.from_file = from_file;
   self.relative_date = relative_date;
+  self.read_header_from_string = read_header_from_string;
   return self;
 };
+
+exports.Channel = Channel;
+exports.EDF = EDF;
+exports.string_from_buffer = string_from_buffer;

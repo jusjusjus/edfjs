@@ -1,0 +1,29 @@
+{
+  "name": "edfjs",
+  "version": "0.1.0",
+  "description": "A javascript implimentation of European Data Format.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jusjusjus/edfjs.git"
+  },
+  "author": "Justus Schwabedal <jschwabedal@gmail.com> (https://jusjusjus.github.io)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jusjusjus/edfjs/issues"
+  },
+  "homepage": "https://github.com/jusjusjus/edfjs#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "filereader": "^0.10.3",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "mocha": "^5.2.0"
+  }
+}

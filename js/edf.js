@@ -88,7 +88,9 @@ var Channel = function (self={}) {
 
   var set_record = function (record, digi) {
     var start = record*self.num_samples_per_record;
+    // var phys = Float32Array.from(digi).map(digital2physical);
     for (var i=0; i<self.num_samples_per_record; i++) {
+      // self.blob[start+i] = phys[i];
       self.blob[start+i] = digital2physical(digi[i]);
     }
   }
@@ -181,7 +183,7 @@ var EDF = function (self={}) {
       var samples_in_blob = check_blob_size(buffer);
     } catch(err) {
       console.error(err);
-      var samples_in_blob = (buffer.byteLength-self.num_header_bytes)/2;
+      var samples_in_blob = (buffer.byteLength-self.num_header_bytes)/bytes_per_sample;
     }
     var blob = new Int16Array(buffer, self.num_header_bytes, samples_in_blob);
     for (var c=0; c<self.num_channels; c++) {

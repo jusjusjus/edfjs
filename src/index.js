@@ -153,6 +153,10 @@ var EDF = function (self) {
         start = end;
       }
     }
+    self.channel_by_label = {}
+    for(var c in self.channels) {
+      self.channel_by_label[self.channels[c].label] = self.channels[c];
+    }
   }
 
   var check_blob_size = function(buffer) {
@@ -226,6 +230,15 @@ var EDF = function (self) {
     return self;
   }
 
+  var get_physical_samples = function(t0, dt, channels) {
+    var data = {};
+    for(var c in channels) {
+      var label = channels[c];
+      data[label] = self.channel_by_label[label].get_physical_samples(t0, dt);
+    }
+    return data;
+  }
+
   var relative_time = function (milliseconds) {
     return self.startdatetime.getTime()+milliseconds;
   }
@@ -236,6 +249,7 @@ var EDF = function (self) {
 
   self.from_file = from_file;
   self.relative_date = relative_date;
+  self.get_physical_samples = get_physical_samples;
   self.read_header_from_string = read_header_from_string;
   return self;
 }

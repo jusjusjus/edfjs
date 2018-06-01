@@ -153,9 +153,10 @@ var EDF = function (self) {
         start = end;
       }
     }
-    self.channel_by_label = {}
+    self.channel_by_label = {};
     for(var c in self.channels) {
-      self.channel_by_label[self.channels[c].label] = self.channels[c];
+      var C = self.channels[c];
+      self.channel_by_label[C.label] = C;
     }
   }
 
@@ -197,6 +198,11 @@ var EDF = function (self) {
           )
         );
       }
+    }
+    self.sampling_rate = {};
+    for(var l in self.channel_by_label) {
+      var C = self.channel_by_label[l];
+      self.sampling_rate[l] = C.sampling_rate;
     }
   }
 

@@ -2,7 +2,7 @@
 'use strict';
 var expect = require('chai').expect;
 var fs = require('fs');
-var edfjs = require('../src/edf');
+var edfjs = require('../src/index');
 
 // download 'sample.edf' to test the edf reader
 var download = function (url, filename=null) {

@@ -18,14 +18,9 @@ build it with npm using `npm run build`:
 
 A stand-alone version of the library should appear in `./dist/edf.min.js`.  Before you need to install other -dependencies.
 
-To include the library into your client-side application use and access the namepace as `edfjs.<..>`
-
-	<script src="./edf.js"></script>
-	<script>
-	var edffile = edfjs.EDF();
-	</script>
-
 ## Usage
+
+[This](https://github.com/jusjusjus/edfjs/blob/master/index.html) gives an example of how to use the library.
 
 See [this webpage](https://jusjusjus.github.io/html/edfdataviewer.html) for a client-side deployment.
 

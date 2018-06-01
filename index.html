@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="./dist/edf.min.js"></script>
+<script>
+	var edf = null;
+	function read_file() {
+		var file = document.getElementById("fileSelector").files[0];
+		edf = edfjs.EDF().from_file(file, callback, header_only=false);
+	}
+	function callback(evt) {
+		var txt = "File Header<br>";
+		for (var key in edf.fields) {
+			txt += key + " " + edf[key] + "<br>";
+		}
+		txt += "Here a few samples of channel 0 <br>";
+		var data = edf.channels[0].get_physical_samples(0.0, 0.1);
+		for (var d in data) {
+			txt += " "+data[d];
+		}
+		document.getElementById("content").innerHTML = txt;
+	}
+</script>
+</head>
+<body>
+<div><input type="file" id="fileSelector" onchange="read_file();" accept=".edf"/></div>
+<div id="content"></div>
+</body>
+</html>
+

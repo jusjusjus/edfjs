@@ -128,11 +128,6 @@ var EDF = function (self) {
   var header_bytes = 256;
   var bytes_per_sample = 2;
 
-  var onload_handler = function(evt, callback, header_only) {
-    read_buffer(evt.target.result, header_only);
-    callback(evt);
-  }
-
   var read_header_from_string = function (string) {
     var start = 0;
     for (var name in self.fields) {
@@ -225,7 +220,10 @@ var EDF = function (self) {
     header_only = header_only || false;
     var reader = new FileReader();
     self.filename = file.name;
-    reader.onload = function (evt) { onload_handler(evt, callback, header_only); };
+    reader.onload = function (evt) {
+      read_buffer(evt.target.result, header_only);
+      callback(evt);
+    }
     reader.readAsArrayBuffer(file);
     return self;
   }

@@ -22,7 +22,7 @@ A stand-alone version of the library should appear in `./dist/edf.min.js`.  Befo
 
 [This](https://github.com/jusjusjus/edfjs/blob/master/index.html) gives an example of how to use the library.
 
-See [this webpage](https://jusjusjus.github.io/html/edfdataviewer.html) for a client-side deployment.
+See [this webpage](https://jusjusjus.github.io/html/edfdataviewer.html) html snippet for a client-side deployment.
 
 ## Tests
 

@@ -69,7 +69,6 @@ var Channel = function (self) {
   };
   var scale = null;
   var offset = null;
-  var sampling_rate = null;
 
   var digital2physical = function (d) {
     return scale*(d+offset);
@@ -84,7 +83,7 @@ var Channel = function (self) {
     scale = (this.physical_maximum - this.physical_minimum) /
                  (this.digital_maximum  - this.digital_minimum);
     offset = this.physical_maximum / scale - this.digital_maximum;
-    sampling_rate = self.num_samples_per_record/record_duration;
+    self.sampling_rate = self.num_samples_per_record/record_duration;
   }
 
   var set_record = function (record, digi) {
@@ -97,8 +96,8 @@ var Channel = function (self) {
   }
 
   var get_physical_samples = function (t0, dt) {
-    var start = t0*sampling_rate;
-    var end = dt*sampling_rate;
+    var start = t0*self.sampling_rate;
+    var end = dt*self.sampling_rate;
     return self.blob.slice(start, start+end);
   }
 
@@ -106,7 +105,6 @@ var Channel = function (self) {
   self.get_physical_samples = get_physical_samples;
   self.digital2physical = digital2physical;
   self.init = init;
-  self.sampling_rate = function () { return sampling_rate; };
 
   return self;
 }

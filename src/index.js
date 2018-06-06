@@ -219,30 +219,33 @@ var EDF = function (self) {
     read_channel_header_from_string(str);
     check_blob_size(buffer);
     // blob
-    if(header_only == false) {
+    if(!header_only) {
       read_blob_from_buffer(buffer);
     }
   }
 
-  var from_file = function (file, callback, header_only) {
+  var from_file = function (file, header_only) {
     header_only = header_only || false;
-    var reader = new FileReader();
-    self.filename = file.name;
-    reader.onload = function (evt) {
-      read_buffer(evt.target.result, header_only);
-      callback(evt);
-    }
-    reader.readAsArrayBuffer(file);
-    return self;
+    return new Promise( function (resolve, reject) {
+      var reader = new FileReader();
+      self.filename = file.name;
+      reader.onload = function (evt) {
+        read_buffer(evt.target.result, header_only);
+        resolve(self);
+      }
+      reader.readAsArrayBuffer(file);
+    })
   }
 
   var get_physical_samples = function(t0, dt, channels) {
-    var data = {};
-    for(var c in channels) {
-      var label = channels[c];
-      data[label] = self.channel_by_label[label].get_physical_samples(t0, dt);
-    }
-    return data;
+    return new Promise(function (resolve, reject) {
+      var data = {};
+      for(var c in channels) {
+        var label = channels[c];
+        data[label] = self.channel_by_label[label].get_physical_samples(t0, dt);
+      }
+      resolve(data);
+    });
   }
 
   var relative_time = function (milliseconds) {

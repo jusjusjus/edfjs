@@ -4,10 +4,14 @@
 <script src="./dist/edf.min.js"></script>
 <script>
 	var edf = null;
-	function read_file() {
-		var file = document.getElementById("fileSelector").files[0];
-		edf = edfjs.EDF().from_file(file, callback, header_only=false);
+	async function read_file() {
+		var files = document.getElementById("fileSelector").files;
+		if (files.length > 0) {
+			edf = await edfjs.EDF().from_file(files[0], header_only=false);
+			var data = await edf.get_physical_samples(0, 0.1, ['EEG F4-A1']);
+		}
 	}
+
 	function callback(evt) {
 		var txt = "File Header<br>";
 		for (var key in edf.fields) {
@@ -23,7 +27,7 @@
 	}
 </script>
 </head>
-<body>
+<body onload='read_file()'>
 <div><input type="file" id="fileSelector" onchange="read_file();" accept=".edf"/></div>
 <div id="content"></div>
 </body>

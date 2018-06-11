@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!-- For testing the edfjs in the browser -->
 <script src="./dist/edf.min.js"></script>
+<!-- Use this to include in production website -->
+<!-- <script src="http://unpkg.com/edfjs"></script> -->
 <script>
 	var edf = null;
 	async function read_file() {
 		var files = document.getElementById("fileSelector").files;
 		if (files.length > 0) {
 			edf = await edfjs.EDF().from_file(files[0], header_only=false);
-			var data = await edf.get_physical_samples(0, 0.1, ['EEG F4-A1']);
+			show_data();
 		}
 	}
 
-	function callback(evt) {
+	async function show_data() {
 		var txt = "File Header<br>";
 		for (var key in edf.fields) {
 			txt += key + " " + edf[key] + "<br>";
 		}
 		var label = edf.channels[0].label;
 		txt += "Here a few samples of channel "+label+" <br>";
-		var data = edf.get_physical_samples(0.0, 0.1, [label]);
+		var data = await edf.get_physical_samples(0.0, 0.1, [label]);
 		for (var d in data[label]) {
 			txt += data[label][d]+"<br>";
 		}

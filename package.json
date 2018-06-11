@@ -1,8 +1,9 @@
 {
   "name": "edfjs",
   "version": "0.1.0",
-  "description": "A javascript implementation of European Data Format.",
-  "main": "index.js",
+  "description": "A javascript implementation of the European Data Format.",
+  "main": "src/index.js",
+  "unpkg": "dist/edf.min.js",
   "directories": {
     "test": "test"
   },

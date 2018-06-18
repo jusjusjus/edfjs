@@ -95,10 +95,10 @@ var Channel = function (self) {
     }
   }
 
-  var get_physical_samples = function (t0, dt) {
+  var get_physical_samples = function (t0, dt, n) {
+    n = n || dt*self.sampling_rate;
     var start = t0*self.sampling_rate;
-    var end = dt*self.sampling_rate;
-    return self.blob.slice(start, start+end);
+    return self.blob.slice(start, start+n);
   }
 
   self.set_record = set_record;
@@ -237,12 +237,12 @@ var EDF = function (self) {
     })
   }
 
-  var get_physical_samples = function(t0, dt, channels) {
+  var get_physical_samples = function(t0, dt, channels, n) {
     return new Promise(function (resolve, reject) {
       var data = {};
       for(var c in channels) {
         var label = channels[c];
-        data[label] = self.channel_by_label[label].get_physical_samples(t0, dt);
+        data[label] = self.channel_by_label[label].get_physical_samples(t0, dt, n);
       }
       resolve(data);
     });
@@ -257,6 +257,7 @@ var EDF = function (self) {
   }
 
   self.from_file = from_file;
+  self.read_buffer = read_buffer;
   self.relative_date = relative_date;
   self.get_physical_samples = get_physical_samples;
   self.read_header_from_string = read_header_from_string;

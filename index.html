@@ -21,10 +21,11 @@
 			txt += key + " " + edf[key] + "<br>";
 		}
 		var label = edf.channels[0].label;
-		txt += "Here a few samples of channel "+label+" <br>";
-		var data = await edf.get_physical_samples(0.0, 0.1, [label]);
+		var num_samples = 16;
+		txt += "Here a "+num_samples+" samples of channel "+label+" <br>";
+		var data = await edf.get_physical_samples(0.0, null, [label], num_samples);
 		for (var d in data[label]) {
-			txt += data[label][d]+"<br>";
+			txt += d+" "+data[label][d]+"<br>";
 		}
 		document.getElementById("content").innerHTML = txt;
 	}

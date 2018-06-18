@@ -5,12 +5,32 @@ var fs = require('fs');
 var edfjs = require('../src/index');
 
 var filename = "./tmp/sample.edf";
-var buffer = fs.readFileSync(filename);
+var file = fs.readFileSync(filename);
+var edf = edfjs.EDF();
+edf.read_buffer(file.buffer, false);
 
-describe('#edf.read_header_from_string', function () {
-  var edf = edfjs.EDF();
-  edf.read_header_from_string(buffer.toString('utf8', 0, 256));
+describe('#Channel.get_physical_samples', function () {
+  var using_dt = edf.channels[0].get_physical_samples(0.0, 1.0);
+  var using_n = edf.channels[0].get_physical_samples(0.0, null, 256);
+  expect(using_dt.length).to.equal(using_n.length);
+  for (var i=0; i<using_dt.length; i++) {
+    expect(using_dt[i]).to.equal(using_n[i]);
+  }
+});
 
+describe('#EDF.get_physical_samples-using-variable-n', function () {
+  var channel = edf.channels[0];
+  var channel_data = channel.get_physical_samples(0.0, 1.0);
+  edf.get_physical_samples(0.0, null, [channel.label], 256).then( (data) => {
+    var edf_data = data[channel.label];
+    expect(channel_data.length).to.equal(edf_data.length);
+    for (var i=0; i<channel_data.length; i++) {
+      expect(channel_data[i]).to.equal(edf_data[i]);
+    }
+  });
+});
+
+describe('#EDF.read_header', function () {
   var expected = {
     version: '0',
     pid: 'brux2',

@@ -24,7 +24,7 @@
   },
   "watch": {
     "build": "src/*js",
-    "test": "src/*js"
+    "test": ["src/*js", "test/*.js"]
   },
   "homepage": "https://github.com/jusjusjus/edfjs#readme",
   "devDependencies": {
@@ -34,7 +34,6 @@
     "fs": "0.0.1-security",
     "https": "^1.0.0",
     "mocha": "^5.2.0",
-    "npm-watch": "^0.3.0",
-    "uglifyjs": "^2.4.11"
+    "npm-watch": "^0.3.0"
   }
 }

@@ -7,29 +7,37 @@ A lean javascript implementation of European Data Format.
 
 ### Build the module locally
 
-Browserify and Minify is used to build the module as a standalone library so that you can import it into your own scripts.
-To build, git-clone yourself a local copy of master ``, `cd edfjs`, and
-build it with npm using `npm run build`: 
+Browserify and Minify is used to build the module as a standalone library so
+that you can import it into your own scripts.  To build, git-clone yourself a
+local copy of master ``, `cd edfjs`, and build it with npm using `npm run
+build`: 
 
 	git clone https://github.com/jusjusjus/edfjs.git
 	cd edfjs
 	npm install --only=dev
 	npm run build
 
-A stand-alone version of the library should appear in `./dist/edf.min.js`.  Before you need to install other -dependencies.
+A stand-alone version of the library should appear in `./dist/edf.min.js`.
+Before you need to install other -dependencies.
 
 ## Usage
 
-[This](https://github.com/jusjusjus/edfjs/blob/master/index.html) gives an example of how to use the library.
+[This](https://github.com/jusjusjus/edfjs/blob/master/index.html) gives an
+example of how to use the library.
 
-See [this webpage](https://jusjusjus.github.io/html/edfdataviewer.html) html snippet for a client-side deployment.
+See [this webpage](https://jusjusjus.github.io/html/edfdataviewer.html) html
+snippet for a client-side deployment.
 
 ## Tests
+
+The tests currently fails b/c in the pretest phase sample.edf cannot be
+downloaded from my [other repository](https://www.github.com/jusjusjus/pyedf).
+After you download that file manually into "tmp/sample.edf", you can run.
 
   `npm run test`
 
 ## Contributing
 
-In lieu of a formal style guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code.
-
-
+In lieu of a formal style guide, take care to maintain the existing coding
+style. Add unit tests for any new or changed functionality. Lint and test your
+code.

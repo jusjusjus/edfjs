@@ -13,7 +13,7 @@ describe('#Channel.get_physical_samples', function () {
   var using_dt = edf.channels[0].get_physical_samples(0.0, 1.0);
   var using_n = edf.channels[0].get_physical_samples(0.0, null, 256);
   expect(using_dt.length).to.equal(using_n.length);
-  for (var i=0; i<using_dt.length; i++) {
+  for (var i=0; i < using_dt.length; i++) {
     expect(using_dt[i]).to.equal(using_n[i]);
   }
 });
@@ -24,7 +24,7 @@ describe('#EDF.get_physical_samples-using-variable-n', function () {
   edf.get_physical_samples(0.0, null, [channel.label], 256).then( (data) => {
     var edf_data = data[channel.label];
     expect(channel_data.length).to.equal(edf_data.length);
-    for (var i=0; i<channel_data.length; i++) {
+    for (var i=0; i < channel_data.length; i++) {
       expect(channel_data[i]).to.equal(edf_data[i]);
     }
   });

@@ -45,7 +45,7 @@ var parseDateTime = function(date, time, century) {
   second = time[2];
   milliseconds = time[3];
   if (milliseconds && milliseconds.length != 3) {
-    for (var i=0; i<3-milliseconds.length; i++) {
+    for (var i=0; i < 3-milliseconds.length; i++) {
       milliseconds += '0';
     }
     milliseconds = milliseconds.substring(0, 4);
@@ -89,7 +89,7 @@ var Channel = function (self) {
   var set_record = function (record, digi) {
     var start = record*self.num_samples_per_record;
     // var phys = Float32Array.from(digi).map(digital2physical);
-    for (var i=0; i<self.num_samples_per_record; i++) {
+    for (var i=0; i < self.num_samples_per_record; i++) {
       // self.blob[start+i] = phys[i];
       self.blob[start+i] = digital2physical(digi[i]);
     }
@@ -139,7 +139,7 @@ var EDF = function (self) {
 
   var read_channel_header_from_string = function (string) {
     self.channels = [];
-    for (var c=0; c<self.num_channels; c++) {
+    for (var c=0; c < self.num_channels; c++) {
       self.channels.push(Channel());
     }
     var start = 0;
@@ -147,7 +147,7 @@ var EDF = function (self) {
     for (var name in channel_fields) {
       var type = channel_fields[name][0];
       var len = channel_fields[name][1];
-      for (var c=0; c<self.num_channels; c++) {
+      for (var c=0; c < self.num_channels; c++) {
         var end = start + len;
         self.channels[c][name] = type(string.substring(start, end));
         start = end;
@@ -162,7 +162,7 @@ var EDF = function (self) {
 
   var check_blob_size = function(buffer) {
     var samples_per_record = 0;
-    for (var c=0; c<self.num_channels; c++) {
+    for (var c=0; c < self.num_channels; c++) {
       samples_per_record += self.channels[c].num_samples_per_record;
     }
     var expected_samples = samples_per_record*self.num_records;
@@ -174,7 +174,7 @@ var EDF = function (self) {
 
   var read_blob_from_buffer = function (buffer) {
     var record_channel_map = [0];
-    for (var c=0; c<self.num_channels; c++) {
+    for (var c=0; c < self.num_channels; c++) {
       record_channel_map.push(
         record_channel_map[c] + self.channels[c].num_samples_per_record);
     }
@@ -186,11 +186,11 @@ var EDF = function (self) {
       var samples_in_blob = (buffer.byteLength-self.num_header_bytes)/bytes_per_sample;
     }
     var blob = new Int16Array(buffer, self.num_header_bytes, samples_in_blob);
-    for (var c=0; c<self.num_channels; c++) {
+    for (var c=0; c < self.num_channels; c++) {
       self.channels[c].init(self.num_records, self.record_duration);
     }
-    for (var r=0; r<self.num_records; r++) {
-      for (var c=0; c<self.num_channels; c++) {
+    for (var r=0; r < self.num_records; r++) {
+      for (var c=0; c < self.num_channels; c++) {
         self.channels[c].set_record(r,
           blob.slice(
             r*samples_per_record + record_channel_map[c],

@@ -24,16 +24,21 @@
   },
   "watch": {
     "build": "src/*js",
-    "test": ["src/*js", "test/*.js"]
+    "test": [
+      "src/*js",
+      "test/*.js"
+    ]
   },
   "homepage": "https://github.com/jusjusjus/edfjs#readme",
   "devDependencies": {
     "browserify": "^16.2.2",
     "chai": "^4.1.2",
+    "chai-almost": "^1.0.1",
     "filereader": "^0.10.3",
     "fs": "0.0.1-security",
     "https": "^1.0.0",
     "mocha": "^5.2.0",
     "npm-watch": "^0.3.0"
-  }
+  },
+  "dependencies": {}
 }

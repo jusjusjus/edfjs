@@ -9,11 +9,15 @@ A lean javascript implementation of European Data Format.
 
 To use the library for your website, you can install the npm package:
 
-	npm i edfjs
+```bash
+npm i edfjs
+```
 
 Use it in your javascripts, e.g., with:
 
-	const edfjs = require("edfjs");
+```javascript
+const edfjs = require("edfjs");
+```
 
 ### Build the module locally
 
@@ -22,10 +26,12 @@ that you can import it into your own scripts.  To build, git-clone yourself a
 local copy of master ``, `cd edfjs`, and build it with npm using `npm run
 build`: 
 
-	git clone https://github.com/jusjusjus/edfjs.git
-	cd edfjs
-	npm install --only=dev
-	npm run build
+```bash
+git clone https://github.com/jusjusjus/edfjs.git
+cd edfjs
+npm install --only=dev
+npm run build
+```
 
 A stand-alone version of the library, `./dist/edf.min.js`, should appear.
 Before you need to install other dependencies.
@@ -35,13 +41,17 @@ Before you need to install other dependencies.
 In `./web`, we give an example usage of the library.  You can transpile the
 javascripts used in `./web/index.html` by running:
 
-	npm run testweb
+```bash
+npm run testweb
+```
 
 ## Tests
 
 To test run:
 
-  npm run test
+```bash
+npm run test
+```
 
 ## Contributing
 

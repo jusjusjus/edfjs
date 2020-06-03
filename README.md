@@ -5,6 +5,16 @@ A lean javascript implementation of European Data Format.
 
 ## Installation
 
+### Install with npm
+
+To use the library for your website, you can install the npm package:
+
+	npm i edfjs
+
+Use it in your javascripts, e.g., with:
+
+	const edfjs = require("edfjs");
+
 ### Build the module locally
 
 Browserify and Minify is used to build the module as a standalone library so
@@ -17,27 +27,24 @@ build`:
 	npm install --only=dev
 	npm run build
 
-A stand-alone version of the library should appear in `./dist/edf.min.js`.
-Before you need to install other -dependencies.
+A stand-alone version of the library, `./dist/edf.min.js`, should appear.
+Before you need to install other dependencies.
 
 ## Usage
 
-[This](https://github.com/jusjusjus/edfjs/blob/master/index.html) gives an
-example of how to use the library.
+In `./web`, we give an example usage of the library.  You can transpile the
+javascripts used in `./web/index.html` by running:
 
-See [this webpage](https://jusjusjus.github.io/html/edfdataviewer.html) html
-snippet for a client-side deployment.
+	npm run testweb
 
 ## Tests
 
-The tests currently fails b/c in the pretest phase sample.edf cannot be
-downloaded from my [other repository](https://www.github.com/jusjusjus/pyedf).
-After you download that file manually into "tmp/sample.edf", you can run.
+To test run:
 
-  `npm run test`
+  npm run test
 
 ## Contributing
 
 In lieu of a formal style guide, take care to maintain the existing coding
-style. Add unit tests for any new or changed functionality. Lint and test your
+style. Add unit tests for any new or changed functionality.  Lint and test your
 code.

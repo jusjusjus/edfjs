@@ -1,22 +1,22 @@
 
 'use strict';
 
-var toString = function(c) {
+function toString(c) {
   return String(c).trim();
 }
 
-var string_from_buffer = function(buffer, start, end) {
+function string_from_buffer(buffer, start, end) {
   var ba = new Uint8Array(buffer, start, end-start);
   return String.fromCharCode.apply(null, ba);
 }
 
-var assert = function(condition, msg) {
+function assert(condition, msg) {
   if (!condition) {
     throw "Assertion Error: "+msg;
   }
 }
 
-var parseDateTime = function(date, time, century) {
+function parseDateTime(date, time, century) {
   century = century || '20';
   var year, month, day, hour, minute, second, milliseconds;
   if (date.includes('-')) {
@@ -35,9 +35,9 @@ var parseDateTime = function(date, time, century) {
     month = date[1];
     day = date[0];
   }
-  month = +month-1;
+  month = month - 1;
   if (year.length == 2) {
-    year = century+year;
+    year = century + year;
   }
   time = time.replace(/\./g, ':').split(':');
   hour = time[0];
@@ -45,7 +45,7 @@ var parseDateTime = function(date, time, century) {
   second = time[2];
   milliseconds = time[3];
   if (milliseconds && milliseconds.length != 3) {
-    for (var i=0; i < 3-milliseconds.length; i++) {
+    for (var i=0; i < 3 - milliseconds.length; i++) {
       milliseconds += '0';
     }
     milliseconds = milliseconds.substring(0, 4);
@@ -53,30 +53,30 @@ var parseDateTime = function(date, time, century) {
   return new Date(Date.UTC(year, month, day, hour, minute, second, milliseconds || 0));
 }
 
-var Channel = function (self) {
+function Channel(self) {
   self = self || {};
   self.fields = {
-    label:    		          [toString, 16],
-    channel_type:        	  [toString, 80],
-    physical_dimension:     [toString, 8],
-    physical_minimum:	      [Number, 8],
-    physical_maximum:	      [Number, 8],
-    digital_minimum:        [Number, 8],
-    digital_maximum:        [Number, 8],
-    prefiltering:           [toString, 80],
+    label: [toString, 16],
+    channel_type: [toString, 80],
+    physical_dimension: [toString, 8],
+    physical_minimum:	[Number, 8],
+    physical_maximum: [Number, 8],
+    digital_minimum: [Number, 8],
+    digital_maximum: [Number, 8],
+    prefiltering: [toString, 80],
     num_samples_per_record: [Number, 8],
-    reserved:               [toString, 32]
+    reserved: [toString, 32]
   };
   var scale = null;
   var offset = null;
 
-  var digital2physical = function (d) {
-    return scale*(d+offset);
+  function digital2physical(d) {
+    return scale * (d + offset);
   }
 
-  var init = function (num_records, record_duration) {
+  function init(num_records, record_duration) {
     if (self.num_samples_per_record == null) {
-      console.log("Error: allocate_blob called on uninitialized channel.");
+      console.error("Error: allocate_blob called on uninitialized channel.");
       return null;
     }
     self.blob = new Float32Array(num_records*self.num_samples_per_record);
@@ -86,16 +86,14 @@ var Channel = function (self) {
     self.sampling_rate = self.num_samples_per_record/record_duration;
   }
 
-  var set_record = function (record, digi) {
+  function set_record(record, digi) {
     var start = record*self.num_samples_per_record;
-    // var phys = Float32Array.from(digi).map(digital2physical);
     for (var i=0; i < self.num_samples_per_record; i++) {
-      // self.blob[start+i] = phys[i];
       self.blob[start+i] = digital2physical(digi[i]);
     }
   }
 
-  var get_physical_samples = function (t0, dt, n) {
+  function get_physical_samples(t0, dt, n) {
     n = n || dt*self.sampling_rate;
     var start = t0*self.sampling_rate;
     return self.blob.slice(start, start+n);
@@ -109,7 +107,7 @@ var Channel = function (self) {
   return self;
 }
 
-var EDF = function (self) {
+function EDF(self) {
   self = self || {};
   self.fields = {
     version:    		 [toString, 8],
@@ -126,7 +124,7 @@ var EDF = function (self) {
   var header_bytes = 256;
   var bytes_per_sample = 2;
 
-  var read_header_from_string = function (string) {
+  function read_header_from_string(string) {
     var start = 0;
     for (var name in self.fields) {
       var type = self.fields[name][0];
@@ -137,9 +135,10 @@ var EDF = function (self) {
     self.startdatetime = parseDateTime(self.startdate, self.starttime);
   }
 
-  var read_channel_header_from_string = function (string) {
+  function read_channel_header_from_string(string) {
     self.channels = [];
-    for (var c=0; c < self.num_channels; c++) {
+    var c = null;
+    for (c=0; c < self.num_channels; c++) {
       self.channels.push(Channel());
     }
     var start = 0;
@@ -147,14 +146,14 @@ var EDF = function (self) {
     for (var name in channel_fields) {
       var type = channel_fields[name][0];
       var len = channel_fields[name][1];
-      for (var c=0; c < self.num_channels; c++) {
+      for (c=0; c < self.num_channels; c++) {
         var end = start + len;
         self.channels[c][name] = type(string.substring(start, end));
         start = end;
       }
     }
     self.channel_by_label = {};
-    for(var c in self.channels) {
+    for(c in self.channels) {
       var C = self.channels[c];
       self.channel_by_label[C.label] = C;
     }
@@ -174,23 +173,25 @@ var EDF = function (self) {
 
   var read_blob_from_buffer = function (buffer) {
     var record_channel_map = [0];
-    for (var c=0; c < self.num_channels; c++) {
+    var c = null;
+    for (c=0; c < self.num_channels; c++) {
       record_channel_map.push(
         record_channel_map[c] + self.channels[c].num_samples_per_record);
     }
     var samples_per_record = record_channel_map[self.channels.length];
+    var samples_in_blob = null;
     try {
-      var samples_in_blob = check_blob_size(buffer);
+      samples_in_blob = check_blob_size(buffer);
     } catch(err) {
       console.error(err);
-      var samples_in_blob = (buffer.byteLength-self.num_header_bytes)/bytes_per_sample;
+      samples_in_blob = (buffer.byteLength-self.num_header_bytes)/bytes_per_sample;
     }
     var blob = new Int16Array(buffer, self.num_header_bytes, samples_in_blob);
-    for (var c=0; c < self.num_channels; c++) {
+    for (c=0; c < self.num_channels; c++) {
       self.channels[c].init(self.num_records, self.record_duration);
     }
     for (var r=0; r < self.num_records; r++) {
-      for (var c=0; c < self.num_channels; c++) {
+      for (c=0; c < self.num_channels; c++) {
         self.channels[c].set_record(r,
           blob.slice(
             r*samples_per_record + record_channel_map[c],
@@ -206,7 +207,7 @@ var EDF = function (self) {
     }
   }
 
-  var read_buffer = function (buffer, header_only) {
+  function read_buffer(buffer, header_only) {
     header_only = header_only || false;
     // header
     var str = string_from_buffer(buffer, 0, header_bytes);
@@ -224,9 +225,9 @@ var EDF = function (self) {
     }
   }
 
-  var from_file = function (file, header_only) {
+  function from_file(file, header_only) {
     header_only = header_only || false;
-    return new Promise( function (resolve, reject) {
+    return new Promise( function (resolve) {
       var reader = new FileReader();
       self.filename = file.name;
       reader.onload = function (evt) {
@@ -237,8 +238,8 @@ var EDF = function (self) {
     })
   }
 
-  var get_physical_samples = function(t0, dt, channels, n) {
-    return new Promise(function (resolve, reject) {
+  function get_physical_samples(t0, dt, channels, n) {
+    return new Promise(function (resolve) {
       var data = {};
       for(var c in channels) {
         var label = channels[c];
@@ -248,11 +249,11 @@ var EDF = function (self) {
     });
   }
 
-  var relative_time = function (milliseconds) {
-    return self.startdatetime.getTime()+milliseconds;
+  function relative_time(milliseconds) {
+    return self.startdatetime.getTime() + milliseconds;
   }
 
-  var relative_date = function (milliseconds) {
+  function relative_date(milliseconds) {
     return new Date(relative_time(milliseconds));
   }
 

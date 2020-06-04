@@ -22,7 +22,6 @@ describe('Channel', () => {
     const samplingRate = channel.sampling_rate;
     const samples_dt = channel.get_physical_samples(0.0, 1.0);
     const samples_n = channel.get_physical_samples(0.0, null, samplingRate);
-    // const samples = ;
     it(`returns samples at ${samplingRate} Hz`, () => {
       expect(samples_dt.length).to.equal(samples_n.length);
       expect(samples_dt.length).to.equal(samplingRate);

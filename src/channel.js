@@ -18,8 +18,8 @@ function Channel(self) {
     num_samples_per_record: [Number, 8],
     reserved: [toString, 32]
   };
-  let scale = null;
-  let offset = null;
+  let scale,
+      offset;
 
   function digital2physical(d) {
     return scale * (d + offset);
@@ -27,14 +27,13 @@ function Channel(self) {
 
   function init(num_records, record_duration) {
     if (self.num_samples_per_record == null) {
-      console.error("Error: allocate_blob called on uninitialized channel.");
-      return null;
+      throw "init called on uninitialized channel.";
     }
     self.blob = new Float32Array(num_records*self.num_samples_per_record);
     scale = (this.physical_maximum - this.physical_minimum) /
-                 (this.digital_maximum  - this.digital_minimum);
+            (this.digital_maximum  - this.digital_minimum);
     offset = this.physical_maximum / scale - this.digital_maximum;
-    self.sampling_rate = self.num_samples_per_record/record_duration;
+    self.sampling_rate = self.num_samples_per_record / record_duration;
   }
 
   function set_record(record, digi) {

@@ -23,7 +23,7 @@ const fp = fs.readFileSync("./examples/sample.edf");
 edf.read_buffer(fp.buffer);
 ```
 
-### CDN
+### Include module from CDN
 
 The module can be used in your webpage by including the following link from
 jsdelivr CDN:

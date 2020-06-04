@@ -23,6 +23,15 @@ const fp = fs.readFileSync("./examples/sample.edf");
 edf.read_buffer(fp.buffer);
 ```
 
+### CDN
+
+The module can be used in your webpage by including the following link from
+jsdelivr CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/edfjs@latest/dist/edf.min.js"></script>
+```
+
 ### Build the module locally
 
 Browserify and Minify is used to build the module as a standalone library so

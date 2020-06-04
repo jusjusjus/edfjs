@@ -27,7 +27,7 @@ function Channel(self) {
 
   function init(num_records, record_duration) {
     if (self.num_samples_per_record == null) {
-      throw "init called on uninitialized channel.";
+      throw 'init called on uninitialized channel';
     }
     self.blob = new Float32Array(num_records*self.num_samples_per_record);
     scale = (this.physical_maximum - this.physical_minimum) /

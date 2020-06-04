@@ -11,11 +11,11 @@ describe('utils', () => {
 
   describe('#toString', () => {
     it('trims strings correctly', () => {
-      expect(utils.toString(" Hello ")).to.equal("Hello");
+      expect(utils.toString(' Hello ')).to.equal('Hello');
     });
   });
 
-  describe("#assert", () => {
+  describe('#assert', () => {
     it('throws on false', () => {
       expect(() => utils.assert(false)).to.throw();
     });

@@ -1,8 +1,8 @@
 
 'use strict';
 
-const utils = require("./utils");
-const Channel = require("./channel");
+const utils = require('./utils');
+const Channel = require('./channel');
 
 const toString = utils.toString;
 

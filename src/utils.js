@@ -8,9 +8,9 @@ function string_from_buffer(buffer, start, end) {
   return String.fromCharCode.apply(null, ba);
 }
 
-function assert(condition, msg) {
+function assert(condition, msg='') {
   if (!condition) {
-    throw "Assertion Error: "+msg;
+    throw 'Assertion Error: ' + msg;
   }
 }
 
@@ -56,4 +56,4 @@ module.exports = {
   string_from_buffer: string_from_buffer,
   assert: assert,
   parseDateTime: parseDateTime
-}
+};

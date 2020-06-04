@@ -11,7 +11,7 @@ chai.use(almostChai(10e-6));
 const EDF = require('../src/edf');
 const samples = require('../examples/sample.json');
 
-const edfFilename = "./examples/sample.edf";
+const edfFilename = './examples/sample.edf';
 
 describe('EDF Header', () => {
   const filebuffer = fs.readFileSync(edfFilename).buffer;
@@ -30,7 +30,7 @@ describe('EDF Header', () => {
         num_records: 100,
         record_duration: 1,
         num_channels: 5,
-        startdatetime: new Date("2002-02-04T22:07:23.000Z")
+        startdatetime: new Date('2002-02-04T22:07:23.000Z')
       };
       for (let key in expected) {
         if (key === 'startdatetime') {
@@ -58,7 +58,7 @@ describe('EDF', () => {
             for (let i=0; i < readSamples.length; i++) {
               expect(readSamples[i]).to.almost.equal(expected[i]);
             }
-        })
+        });
       }
     });
   });

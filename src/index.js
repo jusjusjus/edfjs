@@ -1,11 +1,11 @@
 
 'use strict';
 
-var EDF = require("./edf");
-var utils = require("./utils");
-var Channel = require("./channel");
+const EDF = require("./edf");
+const utils = require("./utils");
+const Channel = require("./channel");
 
-var edfjs = {
+const edfjs = {
   EDF: EDF,
   Channel: Channel,
   string_from_buffer: utils.string_from_buffer

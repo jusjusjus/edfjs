@@ -4,7 +4,7 @@ function toString(c) {
 }
 
 function string_from_buffer(buffer, start, end) {
-  var ba = new Uint8Array(buffer, start, end-start);
+  const ba = new Uint8Array(buffer, start, end-start);
   return String.fromCharCode.apply(null, ba);
 }
 
@@ -16,7 +16,7 @@ function assert(condition, msg) {
 
 function parseDateTime(date, time, century) {
   century = century || '20';
-  var year, month, day, hour, minute, second, milliseconds;
+  let year, month, day, hour, minute, second, milliseconds;
   if (date.includes('-')) {
     date = date.split('-');
     year = date[0];
@@ -43,7 +43,7 @@ function parseDateTime(date, time, century) {
   second = time[2];
   milliseconds = time[3];
   if (milliseconds && milliseconds.length != 3) {
-    for (var i=0; i < 3 - milliseconds.length; i++) {
+    for (let i=0; i < 3 - milliseconds.length; i++) {
       milliseconds += '0';
     }
     milliseconds = milliseconds.substring(0, 4);

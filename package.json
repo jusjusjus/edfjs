@@ -9,8 +9,7 @@
   },
   "scripts": {
     "test": "eslint src/*.js test/*.js && mocha --reporter spec",
-    "build": "browserify ./src/index.js --s edfjs -o ./dist/edf.js && uglifyjs ./dist/edf.js -mc > ./dist/edf.min.js",
-    "testweb": "webpack --config config/webpack.testweb.js",
+		"build": "webpack --config ./config/webpack.config.js",
     "watch": "npm-watch"
   },
   "repository": {
@@ -31,7 +30,6 @@
   },
   "homepage": "https://github.com/jusjusjus/edfjs#readme",
   "devDependencies": {
-    "browserify": "^16.2.2",
     "chai": "^4.1.2",
     "chai-almost": "^1.0.1",
     "chai-datetime": "^1.6.0",

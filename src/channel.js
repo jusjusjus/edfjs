@@ -1,8 +1,8 @@
 
 'use strict';
 
-var utils = require('./utils');
-var toString = utils.toString;
+const utils = require('./utils');
+const toString = utils.toString;
 
 function Channel(self) {
   self = self || {};
@@ -18,8 +18,8 @@ function Channel(self) {
     num_samples_per_record: [Number, 8],
     reserved: [toString, 32]
   };
-  var scale = null;
-  var offset = null;
+  let scale = null;
+  let offset = null;
 
   function digital2physical(d) {
     return scale * (d + offset);
@@ -38,7 +38,7 @@ function Channel(self) {
   }
 
   function set_record(record, digi) {
-    var start = record*self.num_samples_per_record;
+    const start = record*self.num_samples_per_record;
     for (var i=0; i < self.num_samples_per_record; i++) {
       self.blob[start+i] = digital2physical(digi[i]);
     }
@@ -46,7 +46,7 @@ function Channel(self) {
 
   function get_physical_samples(t0, dt, n) {
     n = n || dt*self.sampling_rate;
-    var start = t0*self.sampling_rate;
+    const start = t0*self.sampling_rate;
     return self.blob.slice(start, start+n);
   }
 

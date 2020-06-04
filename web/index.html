@@ -1,14 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+<script src="../dist/edf.min.js"></script>
+<script>
+	async function read_file() {
+		var files = document.getElementById("fileSelector").files;
+		if (files.length > 0) {
+			edf = await edfjs.EDF().from_file(files[0], header_only=false);
+			show_data();
+		}
+	}
+
+	async function show_data() {
+		var txt = "File Header<br>";
+		for (var key in edf.fields) {
+			txt += key + " " + edf[key] + "<br>";
+		}
+		var label = edf.channels[0].label;
+		var num_samples = 16;
+		txt += "Here a "+num_samples+" samples of channel "+label+" <br>";
+		var data = await edf.get_physical_samples(0.0, null, [label], num_samples);
+		for (var d in data[label]) {
+			txt += d+" "+data[label][d]+"<br>";
+		}
+		document.getElementById("content").innerHTML = txt;
+	}
+</script>
 </head>
-<body>
-<body>
+
+<body onload="read_file()">
 <div>
-	<input type="file" id="fileSelector" accept=".edf"/>
+	<input type="file" id="fileSelector" onchange="read_file()" accept=".edf"/>
 </div>
 <div id="content"></div>
 </body>
-<script src="./bundle.js"></script>
-</html>
 
+</html>

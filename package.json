@@ -1,6 +1,6 @@
 {
   "name": "edfjs",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A javascript implementation of the European Data Format.",
   "main": "src/index.js",
   "unpkg": "dist/edf.min.js",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "eslint src/*.js test/*.js && mocha --reporter spec",
-		"build": "webpack --config ./config/webpack.config.js",
+    "build": "webpack --config ./config/webpack.config.js",
     "watch": "npm-watch"
   },
   "repository": {

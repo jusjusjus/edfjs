@@ -42,12 +42,9 @@ Before you need to install other dependencies.
 
 ## Usage
 
-In `./web`, we give an example usage of the library.  You can transpile the
-javascripts used in `./web/index.html` by running:
-
-```bash
-npm run testweb
-```
+In `./web`, we give an example usage of edfjs directly included in an html
+document.  Build the minified module using `npm run build`, start serving
+`./web/index.html` and load an edf file for demo.
 
 ## Tests
 

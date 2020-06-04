@@ -18,7 +18,7 @@ Use it in your javascripts, e.g., with:
 ```javascript
 const fs = require('fs');
 const edfjs = require("edfjs");
-const edf = edfjs.EDF();
+const edf = new edfjs.EDF();
 const fp = fs.readFileSync("./examples/sample.edf");
 edf.read_buffer(fp.buffer);
 ```

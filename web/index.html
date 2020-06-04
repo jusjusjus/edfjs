@@ -4,15 +4,19 @@
 <head>
 <script src="../dist/edf.min.js"></script>
 <script>
-	async function read_file() {
-		var files = document.getElementById("fileSelector").files;
+
+	let edf;
+
+	async function readFile() {
+		let files = document.getElementById("fileSelector").files;
 		if (files.length > 0) {
-			edf = await edfjs.EDF().from_file(files[0], header_only=false);
-			show_data();
+			edf = new edfjs.EDF();
+			edf = await edf.from_file(files[0], header_only=false);
+			showData();
 		}
 	}
 
-	async function show_data() {
+	async function showData() {
 		var txt = "File Header<br>";
 		for (var key in edf.fields) {
 			txt += key + " " + edf[key] + "<br>";
@@ -29,9 +33,9 @@
 </script>
 </head>
 
-<body onload="read_file();">
+<body onload="readFile();">
 <div>
-	<input type="file" id="fileSelector" onchange="read_file();" accept=".edf"/>
+	<input type="file" id="fileSelector" onchange="readFile();" accept=".edf"/>
 </div>
 <div id="content"></div>
 </body>

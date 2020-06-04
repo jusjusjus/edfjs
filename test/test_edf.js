@@ -15,7 +15,7 @@ const edfFilename = './examples/sample.edf';
 
 describe('EDF Header', () => {
   const filebuffer = fs.readFileSync(edfFilename).buffer;
-  const edf = EDF();
+  const edf = new EDF();
   edf.read_buffer(filebuffer, true);
   describe('#read_header', () => {
     it('reads correct header info', () => {
@@ -45,7 +45,7 @@ describe('EDF Header', () => {
 
 describe('EDF', () => {
   const filebuffer = fs.readFileSync(edfFilename).buffer;
-  const edf = EDF();
+  const edf = new EDF();
   edf.read_buffer(filebuffer, false);
   describe('#get_physical_samples', () => {
     it('returns about same samples as edfdb', () => {

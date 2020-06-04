@@ -15,7 +15,7 @@ const edfFilename = './examples/sample.edf';
 
 describe('Channel', () => {
   const filebuffer = fs.readFileSync(edfFilename).buffer;
-  const edf = EDF();
+  const edf = new EDF();
   edf.read_buffer(filebuffer, false);
   const channel = edf.channels[0];
   describe('#get_physical_samples', () => {

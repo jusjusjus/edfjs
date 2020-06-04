@@ -1,6 +1,6 @@
 {
   "name": "edfjs",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A javascript implementation of the European Data Format.",
   "main": "src/index.js",
   "unpkg": "dist/edf.min.js",

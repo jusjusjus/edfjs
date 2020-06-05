@@ -10,6 +10,7 @@
   "scripts": {
     "lint": "eslint src/*.js test/*.js",
     "test": "mocha --reporter spec",
+    "cypress": "cypress run",
     "build": "webpack --config ./config/webpack.config.js",
     "watch": "npm-watch"
   },
@@ -38,6 +39,8 @@
     "chai": "^4.1.2",
     "chai-almost": "^1.0.1",
     "chai-datetime": "^1.6.0",
+    "cypress": "^4.7.0",
+    "cypress-file-upload": "^4.0.7",
     "eslint": "^7.1.0",
     "filereader": "^0.10.3",
     "fs": "0.0.1-security",

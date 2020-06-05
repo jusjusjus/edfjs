@@ -11,7 +11,7 @@ chai.use(almostChai(10e-6));
 const EDF = require('../src/edf');
 const samples = require('../examples/sample.json');
 
-const edfFilename = './examples/sample.edf';
+const edfFilename = './cypress/fixtures/sample.edf';
 
 describe('Channel', () => {
   const filebuffer = fs.readFileSync(edfFilename).buffer;

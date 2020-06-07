@@ -42,7 +42,8 @@ class EDF {
     return new Promise((resolve) => {
       const data = {};
       for(let label of channels) {
-        data[label] = this.channel_by_label[label].get_physical_samples(t0, dt, n);
+        const channel = this.channel_by_label[label];
+        data[label] = channel.get_physical_samples(t0, dt, n);
       }
       resolve(data);
     });

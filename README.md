@@ -1,5 +1,6 @@
 edfjs
 =========
+[![CircleCI](https://circleci.com/gh/jusjusjus/edfjs.svg?style=svg)](https://circleci.com/gh/jusjusjus/edfjs)
 
 A lean javascript implementation of European Data Format.
 

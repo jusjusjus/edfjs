@@ -12,6 +12,7 @@
     "test": "mocha --reporter spec",
     "cypress": "cypress run",
     "build": "webpack --config ./config/webpack.config.js",
+    "start": "npx http-server",
     "watch": "npm-watch"
   },
   "repository": {
@@ -44,6 +45,7 @@
     "eslint": "^7.1.0",
     "filereader": "^0.10.3",
     "fs": "0.0.1-security",
+    "http-server": "^0.12.3",
     "https": "^1.0.0",
     "mocha": "^5.2.0",
     "npm-watch": "^0.3.0",

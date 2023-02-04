@@ -1,4 +1,3 @@
-
 function toString(c) {
   return String(c).trim();
 }

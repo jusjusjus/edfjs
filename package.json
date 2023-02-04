@@ -11,7 +11,7 @@
     "lint": "eslint src/*.js test/*.js",
     "test": "mocha --reporter spec",
     "cypress": "cypress run",
-    "build": "webpack --config ./config/webpack.config.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config ./config/webpack.config.js",
     "start": "npx http-server",
     "watch": "npm-watch"
   },

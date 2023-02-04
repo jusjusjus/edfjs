@@ -1,4 +1,3 @@
-
 'use strict';
 
 const utils = require('./utils');
@@ -38,14 +37,14 @@ class Channel {
 
   set_record(record, digi) {
     const start = record * this.num_samples_per_record;
-    for (var i=0; i < this.num_samples_per_record; i++) {
-      this.blob[start+i] = this.digital2physical(digi[i]);
+    for (let i = 0; i < this.num_samples_per_record; i++) {
+      this.blob[start + i] = this.digital2physical(digi[i]);
     }
   }
 
   get_physical_samples(t0, dt, n) {
-    n = n || dt*this.sampling_rate;
-    const start = t0*this.sampling_rate;
+    n = n || dt * this.sampling_rate;
+    const start = t0 * this.sampling_rate;
     return this.blob.slice(start, start+n);
   }
 }

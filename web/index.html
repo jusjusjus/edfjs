@@ -5,37 +5,43 @@
 <script src="../dist/edf.min.js"></script>
 <script>
 
-	let edf;
+  let edf;
 
-	async function readFile() {
-		let files = document.getElementById("fileSelector").files;
-		if (files.length > 0) {
-			edf = new edfjs.EDF();
-			edf = await edf.from_file(files[0], header_only=false);
-			showData();
-		}
-	}
+  async function readFile() {
+    const files = document.getElementById("fileSelector").files;
+    document.getElementById("content").innerHTML = '';
+    for (let fileIdx = 0; fileIdx < files.length; fileIdx++) {
+      edf = new edfjs.EDF();
+      edf = await edf.from_file(files[fileIdx], header_only=false);
+      showData(edf);
+    }
+  }
 
-	async function showData() {
-		var txt = "File Header<br>";
-		for (var key in edf.fields) {
-			txt += key + " " + edf[key] + "<br>";
-		}
-		var label = edf.channels[0].label;
-		var num_samples = 16;
-		txt += "Here a "+num_samples+" samples of channel "+label+" <br>";
-		var data = await edf.get_physical_samples(0.0, null, [label], num_samples);
-		for (var d in data[label]) {
-			txt += d+" "+data[label][d]+"<br>";
-		}
-		document.getElementById("content").innerHTML = txt;
-	}
+  async function showData(edf) {
+    let txt = '<h1>EDF Header</h1>';
+    txt += '<table><th>Property</th><th>Value</th>';
+    for (let key in edf.fields) {
+      const val = edf[key];
+      txt += `<tr><th>${key}</th><th>${val}</th></tr>`;
+    }
+    txt += '</table>';
+    const { label } = edf.channels[0];
+    const samples = 16;
+    const data = await edf.get_physical_samples(0.0, null, [label], samples);
+    txt += `<h1>Samples of Channel ${label}</h1>`;
+    txt += '<ol>';
+    data[label].forEach((sample) => {
+      txt += `<li>${sample}</li>`;
+    });
+    txt += '</ol>';
+    document.getElementById("content").innerHTML += txt;
+  }
 </script>
 </head>
 
 <body onload="readFile();">
 <div>
-	<input type="file" id="fileSelector" onchange="readFile();" accept=".edf"/>
+  <input type="file" id="fileSelector" onchange="readFile();" accept=".edf"/>
 </div>
 <div id="content"></div>
 </body>

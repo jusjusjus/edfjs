@@ -1,8 +1,7 @@
-
 const path = require('path');
 
 module.exports = {
-  mode: "production",
+  mode: 'production',
   entry: './src/index.js',
   output: {
     filename: 'edf.min.js',

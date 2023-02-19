@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "lint": "eslint src/*.js test/*.js",
+    "lint": "eslint --ext js src/ test/ config/",
     "test": "mocha --reporter spec",
     "cypress": "cypress run",
     "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config ./config/webpack.config.js",
@@ -27,7 +27,8 @@
   "watch": {
     "lint": [
       "src/*js",
-      "test/*js"
+      "test/*js",
+      "config/*js"
     ],
     "test": [
       "src/*js",

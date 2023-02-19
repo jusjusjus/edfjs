@@ -1,18 +1,39 @@
+
+/**
+ * @param {string|number} c - character or number
+ * @returns {string} - trimmed string of character or number 
+ */
 function toString(c) {
   return String(c).trim();
 }
 
+/**
+ * @param {ArrayBuffer} buffer - buffer to read from
+ * @param {number} start - start index
+ * @param {number} end - end index
+ * @returns {string} - string from buffer
+ */
 function string_from_buffer(buffer, start, end) {
-  const ba = new Uint8Array(buffer, start, end-start);
+  const ba = new Uint8Array(buffer, start, end - start);
   return String.fromCharCode.apply(null, ba);
 }
 
+/**
+ * @param {boolean} condition - condition to check
+ * @param {string} msg - message to throw if condition is false
+ */
 function assert(condition, msg='') {
   if (!condition) {
     throw 'Assertion Error: ' + msg;
   }
 }
 
+/**
+ * @param {string} date - date string
+ * @param {string} time - time string
+ * @param {string} century - century string
+ * @returns {Date} - date object
+ */
 function parseDateTime(date, time, century) {
   century = century || '20';
   let year, month, day, hour, minute, second, milliseconds;

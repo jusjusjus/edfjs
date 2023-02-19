@@ -1,9 +1,12 @@
 'use strict';
 
-const utils = require('./utils');
+const {
+  assert,
+  toString,
+  parseDateTime,
+  string_from_buffer,
+} = require('./utils');
 const Channel = require('./channel');
-
-const toString = utils.toString;
 
 class EDF {
 
@@ -25,6 +28,12 @@ class EDF {
     this.channels = [];
   }
 
+  /**
+   * @param {number} t0 - start time in seconds
+   * @param {number} dt - duration in seconds
+   * @param {string[]} channels - list of channel labels
+   * @param {number} n - number of samples (optional)
+   */
   get_physical_samples(t0=0, dt=null, channels=null, n=null) {
     if (t0 === null) {
       t0 = 0;
@@ -48,6 +57,10 @@ class EDF {
     });
   }
 
+  /**
+   * @param {object} file - File object
+   * @param {boolean} header_only - if true, only read the header
+   */
   from_file(file, header_only=false) {
     return new Promise( (resolve) => {
       const reader = new FileReader();
@@ -60,19 +73,26 @@ class EDF {
     });
   }
 
+  /**
+   * @param {number} milliseconds - time in milliseconds
+   */
   relative_date(milliseconds) {
     return new Date(this.relative_time(milliseconds));
   }
 
+  /**
+   * @param {ArrayBuffer} buffer - ArrayBuffer containing EDF data
+   * @param {boolean} header_only - if true, only read the header
+   */
   read_buffer(buffer, header_only=false) {
     // header
-    const hdr = utils.string_from_buffer(buffer, 0, this.header_bytes);
+    const hdr = string_from_buffer(buffer, 0, this.header_bytes);
     this.read_header_from_string(hdr);
     if (this.num_channels == 0) {
       return null;
     }
     // channels
-    const ch = utils.string_from_buffer(buffer, this.header_bytes, this.num_header_bytes);
+    const ch = string_from_buffer(buffer, this.header_bytes, this.num_header_bytes);
     this.read_channel_header_from_string(ch);
     this.check_blob_size(buffer);
     // blob
@@ -81,6 +101,9 @@ class EDF {
     }
   }
 
+  /**
+   * @param {string} string - string containing EDF header
+   */
   read_header_from_string(string) {
     let start = 0;
     for (let name in this.fields) {
@@ -89,9 +112,12 @@ class EDF {
       this[name] = type(string.substring(start, end));
       start = end;
     }
-    this.startdatetime = utils.parseDateTime(this.startdate, this.starttime);
+    this.startdatetime = parseDateTime(this.startdate, this.starttime);
   }
 
+  /**
+   * @param {string} string - string containing EDF channel header
+   */
   read_channel_header_from_string(string) {
     if(this.num_channels === 0) {
       return;
@@ -116,6 +142,9 @@ class EDF {
     }
   }
 
+  /**
+   * @param {ArrayBuffer} buffer - ArrayBuffer containing samples
+   */
   check_blob_size(buffer) {
     let samples_per_record = 0;
     for (let c=0; c < this.num_channels; c++) {
@@ -124,11 +153,14 @@ class EDF {
     const expected_samples = samples_per_record * this.num_records;
     const samples_in_blob = (buffer.byteLength - this.num_header_bytes) / 2;
     this.duration = this.record_duration * samples_in_blob / samples_per_record;
-    utils.assert(samples_in_blob == expected_samples,
+    assert(samples_in_blob == expected_samples,
                  `Header implies ${expected_samples} samples; ${samples_in_blob} found.`);
     return samples_in_blob;
   }
 
+  /**
+   * @param {ArrayBuffer} buffer - ArrayBuffer containing samples
+   */
   read_blob_from_buffer(buffer) {
     let record_channel_map = [0];
     for (let c=0; c < this.num_channels; c++) {
@@ -163,6 +195,9 @@ class EDF {
     }
   }
 
+  /**
+   * @param {number} milliseconds - time in milliseconds
+   */
   relative_time(milliseconds) {
     return this.startdatetime.getTime() + milliseconds;
   }

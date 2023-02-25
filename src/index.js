@@ -1,14 +1,9 @@
-'use strict';
+import EDF from './edf.js';
+import Channel from './channel.js';
+import { string_from_buffer } from './utils.js';
 
-const EDF = require('./edf');
-const utils = require('./utils');
-const Channel = require('./channel');
-
-const edfjs = {
-  EDF: EDF,
-  Channel: Channel,
-  string_from_buffer: utils.string_from_buffer
+export {
+  EDF,
+  Channel,
+  string_from_buffer,
 };
-
-module.exports = edfjs;
-global.edfjs = edfjs;

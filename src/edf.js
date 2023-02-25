@@ -1,14 +1,12 @@
-'use strict';
-
-const {
+import {
   assert,
   toString,
   parseDateTime,
   string_from_buffer,
-} = require('./utils');
-const Channel = require('./channel');
+} from './utils.js';
+import Channel from './channel.js';
 
-class EDF {
+export default class EDF {
 
   constructor() {
     this.fields = {
@@ -203,5 +201,3 @@ class EDF {
   }
 
 }
-
-module.exports = EDF;

@@ -1,9 +1,8 @@
-
 /**
  * @param {string|number} c - character or number
  * @returns {string} - trimmed string of character or number 
  */
-function toString(c) {
+export function toString(c) {
   return String(c).trim();
 }
 
@@ -13,7 +12,7 @@ function toString(c) {
  * @param {number} end - end index
  * @returns {string} - string from buffer
  */
-function string_from_buffer(buffer, start, end) {
+export function string_from_buffer(buffer, start, end) {
   const ba = new Uint8Array(buffer, start, end - start);
   return String.fromCharCode.apply(null, ba);
 }
@@ -22,7 +21,7 @@ function string_from_buffer(buffer, start, end) {
  * @param {boolean} condition - condition to check
  * @param {string} msg - message to throw if condition is false
  */
-function assert(condition, msg='') {
+export function assert(condition, msg='') {
   if (!condition) {
     throw 'Assertion Error: ' + msg;
   }
@@ -34,7 +33,7 @@ function assert(condition, msg='') {
  * @param {string} century - century string
  * @returns {Date} - date object
  */
-function parseDateTime(date, time, century) {
+export function parseDateTime(date, time, century) {
   century = century || '20';
   let year, month, day, hour, minute, second, milliseconds;
   if (date.includes('-')) {
@@ -70,10 +69,3 @@ function parseDateTime(date, time, century) {
   }
   return new Date(Date.UTC(year, month, day, hour, minute, second, milliseconds || 0));
 }
-
-module.exports = {
-  toString: toString,
-  string_from_buffer: string_from_buffer,
-  assert: assert,
-  parseDateTime: parseDateTime
-};

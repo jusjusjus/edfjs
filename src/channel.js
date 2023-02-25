@@ -1,7 +1,7 @@
-'use strict';
-const { toString } = require('./utils');
+// const { toString } = require('./utils');
+import { toString } from './utils.js';
 
-class Channel {
+export default class Channel {
 
   constructor() {
     this.fields = {
@@ -62,5 +62,3 @@ class Channel {
     return this.blob.slice(start, start+n);
   }
 }
-
-module.exports = Channel;

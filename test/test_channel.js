@@ -1,15 +1,11 @@
-
-'use strict';
-
-const fs = require('fs');
-
-const chai = require('chai');
+import fs from 'fs';
+import chai from 'chai';
+import almostChai from 'chai-almost';
 const expect = chai.expect;
-const almostChai = require('chai-almost');
 chai.use(almostChai(10e-6));
 
-const EDF = require('../src/edf');
-const samples = require('../examples/sample.json');
+import EDF from '../src/edf.js';
+import samples from '../examples/sample.json' assert { type: 'json' };
 
 const edfFilename = './cypress/fixtures/sample.edf';
 

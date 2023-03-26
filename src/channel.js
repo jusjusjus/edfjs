@@ -1,10 +1,7 @@
+// const { toString } = require('./utils');
+import { toString } from './utils.js';
 
-'use strict';
-
-const utils = require('./utils');
-const toString = utils.toString;
-
-class Channel {
+export default class Channel {
 
   constructor() {
     this.fields = {
@@ -21,6 +18,10 @@ class Channel {
     };
   }
 
+  /**
+   * @param {number} num_records - number of records in the file
+   * @param {number} record_duration - duration of a record in seconds
+   */
   init(num_records, record_duration) {
     if (this.num_samples_per_record == null) {
       throw 'init called on uninitialized channel';
@@ -32,22 +33,32 @@ class Channel {
     this.sampling_rate = this.num_samples_per_record / record_duration;
   }
 
+  /**
+   * @param {number} d - digital value
+   */
   digital2physical(d) {
     return this.scale * (d + this.offset);
   }
 
+  /**
+   * @param {number} record - record number
+   * @param {Array<number>} digi - array of digital values
+   */
   set_record(record, digi) {
     const start = record * this.num_samples_per_record;
-    for (var i=0; i < this.num_samples_per_record; i++) {
-      this.blob[start+i] = this.digital2physical(digi[i]);
+    for (let i = 0; i < this.num_samples_per_record; i++) {
+      this.blob[start + i] = this.digital2physical(digi[i]);
     }
   }
 
+  /**
+   * @param {number} t0 - start time in seconds
+   * @param {number} dt - duration in seconds
+   * @param {number} n - number of samples
+   */
   get_physical_samples(t0, dt, n) {
-    n = n || dt*this.sampling_rate;
-    const start = t0*this.sampling_rate;
+    n = n || dt * this.sampling_rate;
+    const start = t0 * this.sampling_rate;
     return this.blob.slice(start, start+n);
   }
 }
-
-module.exports = Channel;

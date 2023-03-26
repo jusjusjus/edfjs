@@ -1,20 +1,39 @@
-
-function toString(c) {
+/**
+ * @param {string|number} c - character or number
+ * @returns {string} - trimmed string of character or number 
+ */
+export function toString(c) {
   return String(c).trim();
 }
 
-function string_from_buffer(buffer, start, end) {
-  const ba = new Uint8Array(buffer, start, end-start);
+/**
+ * @param {ArrayBuffer} buffer - buffer to read from
+ * @param {number} start - start index
+ * @param {number} end - end index
+ * @returns {string} - string from buffer
+ */
+export function string_from_buffer(buffer, start, end) {
+  const ba = new Uint8Array(buffer, start, end - start);
   return String.fromCharCode.apply(null, ba);
 }
 
-function assert(condition, msg='') {
+/**
+ * @param {boolean} condition - condition to check
+ * @param {string} msg - message to throw if condition is false
+ */
+export function assert(condition, msg='') {
   if (!condition) {
     throw 'Assertion Error: ' + msg;
   }
 }
 
-function parseDateTime(date, time, century) {
+/**
+ * @param {string} date - date string
+ * @param {string} time - time string
+ * @param {string} century - century string
+ * @returns {Date} - date object
+ */
+export function parseDateTime(date, time, century) {
   century = century || '20';
   let year, month, day, hour, minute, second, milliseconds;
   if (date.includes('-')) {
@@ -50,10 +69,3 @@ function parseDateTime(date, time, century) {
   }
   return new Date(Date.UTC(year, month, day, hour, minute, second, milliseconds || 0));
 }
-
-module.exports = {
-  toString: toString,
-  string_from_buffer: string_from_buffer,
-  assert: assert,
-  parseDateTime: parseDateTime
-};

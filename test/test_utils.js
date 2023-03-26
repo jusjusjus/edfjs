@@ -1,11 +1,9 @@
-
-'use strict';
-
-const chai = require('chai');
-chai.use(require('chai-datetime'));
+import chai from 'chai';
 const expect = chai.expect;
+import chaiDatetime from 'chai-datetime';
+chai.use(chaiDatetime);
 
-const utils = require('../src/utils');
+import * as utils from '../src/utils.js';
 
 describe('utils', () => {
 

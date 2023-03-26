@@ -1,6 +1,8 @@
 edfjs
 =========
-[![CircleCI](https://circleci.com/gh/jusjusjus/edfjs.svg?style=svg)](https://circleci.com/gh/jusjusjus/edfjs)
+![Lint](https://github.com/jusjusjus/edfjs/workflows/lint/badge.svg)
+![Unit](https://github.com/jusjusjus/edfjs/workflows/Unit%20test/badge.svg)
+![E2E](https://github.com/jusjusjus/edfjs/workflows/end-to-end/badge.svg)
 
 A lean javascript implementation of European Data Format.
 

@@ -66,6 +66,18 @@ To test run:
 npm run test
 ```
 
+## Jest
+
+If you encounter trouble testing your code that uses edfjs (`By default "node_modules" folder is ignored by transformers`),
+please add a "jest.config.js" to your project with the following content:
+
+```javascript
+const esModules = ['edfjs'].join('|');
+module.exports = {
+  transformIgnorePatterns: [`/node_modules/(?!${esModules})`]
+}
+```
+
 ## Contributing
 
 In lieu of a formal style guide, take care to maintain the existing coding

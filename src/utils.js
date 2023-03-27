@@ -30,11 +30,9 @@ export function assert(condition, msg='') {
 /**
  * @param {string} date - date string
  * @param {string} time - time string
- * @param {string} century - century string
  * @returns {Date} - date object
  */
-export function parseDateTime(date, time, century) {
-  century = century || '20';
+export function parseDateTime(date, time) {
   let year, month, day, hour, minute, second, milliseconds;
   if (date.includes('-')) {
     date = date.split('-');
@@ -53,9 +51,9 @@ export function parseDateTime(date, time, century) {
     day = date[0];
   }
   month = month - 1;
-  if (year.length == 2) {
-    year = century + year;
-  }
+  // see EDF+ spec: 2.1.3.2
+  // (https://www.edfplus.info/specs/edfplus.html#additionalspecs)
+  year = year > 84 ? '19' + year: '20' + year;
   time = time.replace(/\./g, ':').split(':');
   hour = time[0];
   minute = time[1];

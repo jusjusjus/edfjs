@@ -2,6 +2,7 @@ import {
   assert,
   toString,
   parseDateTime,
+  parseAnnotations,
   string_from_buffer,
 } from './utils.js';
 import Channel from './channel.js';
@@ -24,6 +25,20 @@ export default class EDF {
     this.header_bytes = 256;
     this.bytes_per_sample = 2;
     this.channels = [];
+  }
+
+  /**
+   * This throws an error if the file type is 'EDF'.
+   *
+   * return - annotations channel
+   */
+  get annotations() {
+    if (this.type === 'EDF') {
+      throw 'no annotations channel in EDF file';
+    }
+    const channel = this.channel_by_label['EDF Annotations'];
+    const buffer = new Uint8Array(channel.blob.buffer);
+    return parseAnnotations(buffer);
   }
 
   /**
@@ -89,6 +104,7 @@ export default class EDF {
     if (this.num_channels == 0) {
       return null;
     }
+    assert(['EDF', 'EDF+C'].includes(this.type), `Unsupported EDF type: ${this.type}`);
     // channels
     const ch = string_from_buffer(buffer, this.header_bytes, this.num_header_bytes);
     this.read_channel_header_from_string(ch);
@@ -200,4 +216,16 @@ export default class EDF {
     return this.startdatetime.getTime() + milliseconds;
   }
 
+  /**
+   * returns the EDF type
+   *
+   * - EDF : European Data Format, the old one
+   * - EDF+C : European Data Format (+) with continuous data
+   * - EDF+D : European Data Format (+) with discontinuous data
+   *
+   * @returns {string} - EDF type, one of 'EDF', 'EDF+C', 'EDF+D'
+   */
+  get type() {
+    return this.reserved.slice(0, 5).trim() || 'EDF';
+  }
 }

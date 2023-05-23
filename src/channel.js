@@ -26,11 +26,15 @@ export default class Channel {
     if (this.num_samples_per_record == null) {
       throw 'init called on uninitialized channel';
     }
-    this.blob = new Float32Array(num_records * this.num_samples_per_record);
-    this.scale = (this.physical_maximum - this.physical_minimum) /
-                 (this.digital_maximum  - this.digital_minimum);
-    this.offset = this.physical_maximum / this.scale - this.digital_maximum;
-    this.sampling_rate = this.num_samples_per_record / record_duration;
+    if (this.label === 'EDF Annotations') {
+      this.blob = new Int16Array(num_records * this.num_samples_per_record);
+    } else {
+      this.blob = new Float32Array(num_records * this.num_samples_per_record);
+      this.scale = (this.physical_maximum - this.physical_minimum) /
+                   (this.digital_maximum  - this.digital_minimum);
+      this.offset = this.physical_maximum / this.scale - this.digital_maximum;
+      this.sampling_rate = this.num_samples_per_record / record_duration;
+    }
   }
 
   /**
@@ -42,12 +46,19 @@ export default class Channel {
 
   /**
    * @param {number} record - record number
-   * @param {Array<number>} digi - array of digital values
+   * @param {Int16Array} digi - array of digital values
    */
   set_record(record, digi) {
-    const start = record * this.num_samples_per_record;
-    for (let i = 0; i < this.num_samples_per_record; i++) {
-      this.blob[start + i] = this.digital2physical(digi[i]);
+    if (this.label === 'EDF Annotations') {
+      const start = record * this.num_samples_per_record;
+      for (let i = 0; i < this.num_samples_per_record; i++) {
+        this.blob[start + i] = digi[i];
+      }
+    } else {
+      const start = record * this.num_samples_per_record;
+      for (let i = 0; i < this.num_samples_per_record; i++) {
+        this.blob[start + i] = this.digital2physical(digi[i]);
+      }
     }
   }
 

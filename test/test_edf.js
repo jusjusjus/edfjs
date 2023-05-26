@@ -7,14 +7,16 @@ chai.use(almostChai(10e-6));
 import EDF from '../src/edf.js';
 import * as samples from '../examples/sample.json' assert { type: 'json' };
 
-const edfFilename = './cypress/fixtures/sample.edf';
+const fixtures = {
+  'EDF': './cypress/fixtures/sample.edf',
+};
 
-describe('EDF Header', () => {
-  const filebuffer = fs.readFileSync(edfFilename).buffer;
-  const edf = new EDF();
-  edf.read_buffer(filebuffer, true);
-  describe('#read_header', () => {
-    it('reads correct header info', () => {
+describe('class EDF', () => {
+  describe('.read_buffer()', () => {
+    it('reads EDF-file header', () => {
+      const filebuffer = fs.readFileSync(fixtures['EDF']).buffer;
+      const edf = new EDF();
+      edf.read_buffer(filebuffer, true);
       const expected = {
         version: '0',
         pid: 'brux2',
@@ -26,36 +28,33 @@ describe('EDF Header', () => {
         num_records: 100,
         record_duration: 1,
         num_channels: 5,
-        startdatetime: new Date('2002-02-04T22:07:23.000Z')
+        startdatetime: new Date('2002-02-04T22:07:23.000Z'),
+        type: 'EDF',
       };
-      for (let key in expected) {
+      Object.entries(expected).forEach(([key, value]) => {
         if (key === 'startdatetime') {
-          expect(edf[key].toString()).to.equal(expected[key].toString());
+          expect(edf[key].toString()).to.equal(value.toString());
         } else {
-          expect(edf[key]).to.equal(expected[key]);
+          expect(edf[key]).to.equal(value);
         }
-      }
+      });
     });
   });
-});
 
-describe('EDF', () => {
-  const filebuffer = fs.readFileSync(edfFilename).buffer;
-  const edf = new EDF();
-  edf.read_buffer(filebuffer, false);
-  describe('#get_physical_samples', () => {
-    it('returns about same samples as edfdb', () => {
-      for (let label in samples) {
-        const expected = samples[label];
-        edf.get_physical_samples(0.0, 1.0, [label])
-          .then( (readSamples) => {
-            readSamples = readSamples[label];
-            expect(expected.length).to.equal(readSamples.length);
-            for (let i=0; i < readSamples.length; i++) {
-              expect(readSamples[i]).to.almost.equal(expected[i]);
-            }
-        });
-      }
-    });
+  it('.read_physical_samples() returns correct samples', () => {
+    const filebuffer = fs.readFileSync(fixtures['EDF']).buffer;
+    const edf = new EDF();
+    edf.read_buffer(filebuffer, false);
+    for (let label in samples) {
+      const expected = samples[label];
+      edf.get_physical_samples(0.0, 1.0, [label])
+        .then( (readSamples) => {
+          readSamples = readSamples[label];
+          expect(expected.length).to.equal(readSamples.length);
+          for (let i=0; i < readSamples.length; i++) {
+            expect(readSamples[i]).to.almost.equal(expected[i]);
+          }
+      });
+    }
   });
 });

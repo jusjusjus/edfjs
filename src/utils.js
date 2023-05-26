@@ -6,6 +6,80 @@ export function toString(c) {
   return String(c).trim();
 }
 
+/** returns Array of annotations from buffer
+ *
+ * Each annotation contains onset and label, and optionally duration.
+ * Separator between adjacent annots is '20'.  Separator between onset and
+ * duration is '21' if available.
+ *
+ * @param {Uint8Array} buffer - buffer to read from
+ * @return {{onset: number, label: string, duration: number}[]} - annotations
+ */
+export function parseAnnotations(buffer) {
+  const annotations = [];
+  let start = 0;
+  let current = null;
+  let lastWas20 = false;
+  for(let end = 0; end < buffer.length; end++) {
+    const value = buffer[end];
+    const closeString = value === 20; // \x**\x14
+    const closeAnnotation = lastWas20 && (value === 0); // \x14\x00
+
+    if (closeString) {
+      const slice = buffer.slice(start, end);
+      if (!current) {
+        current = {
+          label: [],
+          ...parseStartDuration(slice),
+        };
+      } else {
+        current.label.push(bufferToString(slice));
+      }
+      lastWas20 = true;
+      start = end + 1;
+    } else if (closeAnnotation) {
+      start += 1;
+      annotations.push(current);
+      current = null;
+    }
+    lastWas20 = closeString;
+  }
+  return annotations;
+}
+
+/**
+ * returns onset and duration if there's 21, else onset
+ * @param {string} input - input buffer
+ * @return {{onset: number, duration: number}} - onset and duration
+ */
+function parseStartDuration(buffer) {
+  const bufferToInt = (b) => Number(bufferToString(b));
+  for (let end = 0; end < buffer.length; end++) {
+    if (buffer[end] === 21) {
+      return {
+        onset: bufferToInt(buffer.slice(0, end)),
+        duration: bufferToInt(buffer.slice(end + 1, buffer.length))
+      };
+    }
+  }
+  return {
+    onset: bufferToInt(buffer),
+    duration: 0,
+  };
+}
+
+/**
+ * returns string from buffer
+ *
+ * @param {Uint8Array} x - buffer to convert to string
+ * @returns {string} - string from buffer
+ * @private
+ */
+function bufferToString(x) {
+  const string = Buffer.from(x.buffer).toString();
+  return string.replace(/\0/g, '');
+}
+
 /**
  * @param {ArrayBuffer} buffer - buffer to read from
  * @param {number} start - start index

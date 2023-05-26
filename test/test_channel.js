@@ -14,7 +14,7 @@ describe('Channel', () => {
   const edf = new EDF();
   edf.read_buffer(filebuffer, false);
   const channel = edf.channels[0];
-  describe('#get_physical_samples', () => {
+  describe('.get_physical_samples()', () => {
     const samplingRate = channel.sampling_rate;
     const samples_dt = channel.get_physical_samples(0.0, 1.0);
     const samples_n = channel.get_physical_samples(0.0, null, samplingRate);
